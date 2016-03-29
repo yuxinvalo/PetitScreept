@@ -122,7 +122,7 @@ public class FileList extends ListActivity {
 
               //  Toast.makeText(getApplicationContext(), "getContent", Toast.LENGTH_LONG).show();
                 try {
-                    boolean bool = ctr.save(word);
+                    boolean bool = ctr.save_to_tWORD(word);
                     if (bool == false) {
                         Toast.makeText(this, "Word: " + word.getWord() + "can't be pushed into DB",
                                 Toast.LENGTH_LONG).show();

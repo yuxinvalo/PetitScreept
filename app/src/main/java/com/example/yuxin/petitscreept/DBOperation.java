@@ -22,7 +22,6 @@ public class DBOperation {
 
     public boolean save_tWord(Words word){
         SQLiteDatabase db = database.getWritableDatabase();
-        //deleteAll();
         if (word != null){
             ContentValues value = new ContentValues();
             value.put("word", word.getWord());
@@ -58,7 +57,9 @@ public class DBOperation {
     public List get_tWord(){
         List list;
         SQLiteDatabase db = database.getReadableDatabase();
-        String sql = "select * from tWORD GROUP BY word";
+        String sql = "select * from tWORD LEFT JOIN client_vocab ON " +
+                "tWORD.word = client_vocab.word WHERE client_vocab.word IS NULL " +
+                "GROUP BY tWORD.word ORDER BY _id ASC";
         Cursor cursor = db.rawQuery(sql, null);
 
         list = new ArrayList();
@@ -96,28 +97,26 @@ public class DBOperation {
         return list;
     }
 
-    public List getById_list(int id){
-        List list = null;
+    public Words getByIdAllVocab(int id){
+        Words word = null;
         if (id > -1){
             SQLiteDatabase db = database.getReadableDatabase();
-            String sql = "select * from tWORD where _id = ?";
+            String sql = "select * from client_vocab where _id = ?";
             String[] para = new String[]{String.valueOf(id)};
             Cursor cursor = db.rawQuery(sql, para);
 
-            list = new ArrayList();
             while (cursor.moveToNext()){
-                Words word = new Words();
+                word = new Words();
                 word.setId(cursor.getInt(0));
                 word.setWord(cursor.getString(1));
                 word.setLevel(cursor.getInt(2));
                 word.setLvl_master(cursor.getInt(3));
                 word.setMeaning(cursor.getString(4));
-                list.add(word);
             }
             cursor.close();
             db.close();
         }
-        return  list;
+        return  word;
     }
 
     public Words getById(int id){
@@ -151,7 +150,8 @@ public class DBOperation {
             value.put("level", word.getLevel());
             value.put("lvl_master", word.getLvl_master());
             value.put("meaning", word.getMeaning());
-            db.update("tWORD", value, "id=?", new String[]{String.valueOf(word.getId())});
+            db.update("client_vocab", value, "_id=?", new String[]{String.valueOf(word.getId())});
+
             db.close();
             bool = true;
         }
@@ -168,10 +168,24 @@ public class DBOperation {
     public void delete(int id){
         if(id > 0){
             SQLiteDatabase db = database.getWritableDatabase();
-            String sql = "delete * from tWORD where _id = ?";
+            String sql = "delete from client_vocab where _id = ?";
             Object[] para = new Object[]{String.valueOf(id)};
             db.execSQL(sql, para);
             db.close();
         }
+    }
+
+    public String percentKnowlege(){
+        String percent = "";
+        SQLiteDatabase db = database.getReadableDatabase();
+        String sql = "select printf(\"%.2f\", " +
+                "count(tWORD.word) * 100.00/(select count(word) * 1.00 from tWORD)) " +
+                "from tWORD inner join client_vocab ON client_vocab.word = tWORD.word; ";
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst())
+            percent = cursor.getString(0) + "%";
+        cursor.close();
+        db.close();
+        return percent;
     }
 }

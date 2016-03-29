@@ -32,24 +32,26 @@ public class ActivityList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listword);
         list_word = (ListView) findViewById(R.id.listword);
+        String percent = ctr.percentKnowlege();
+
+        Toast.makeText(this,"percentage of familly word: " + percent, Toast.LENGTH_SHORT).show();
 
         //set adapter
         setContent();
-        Toast.makeText(this, "YOLO, setContent() finish", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "YOLO, setContent() finish", Toast.LENGTH_LONG).show();
         }
 
     //Set adapter
     private void setContent() {
         ctr = new Controller(this);
 
-        List words = new ArrayList();
-        Intent intent = getIntent();
-        int temp = intent.getIntExtra("words_token", 0);
+        final List words = new ArrayList();
+        final Intent intent = getIntent();
+        final int temp = intent.getIntExtra("words_token", 0);
         Toast.makeText(getApplicationContext(), "intent value : " + temp, Toast.LENGTH_SHORT).show();
         if (temp == 5) {
             word_list = ctr.getAll();
         }else {
-            //word_list = ctr.getAll();
             word_list = ctr.get_tWord();
         }
         if(word_list != null){
@@ -71,15 +73,23 @@ public class ActivityList extends Activity {
                 new String[] {"word", "meaning", "level"},
                 new int[] {R.id.word_item, R.id.mean_item, R.id.level_item});
         list_word.setAdapter(adapter);
-    }
-
-
-    private class ViewItemListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id){
-            //跳转到ACTIVITY_DETAIL
-        }
-
+        list_word.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> paret, View view, int position, long id) {
+                word = (Words) word_list.get(position);
+                Intent intent = null;
+                if (temp == 5){
+                    intent = new Intent(ActivityList.this, ActivityMywordDetail.class);
+                    Toast.makeText(ActivityList.this, "go to client_vocab", Toast.LENGTH_SHORT).show();
+                    intent.putExtra("id", word.getId());
+                    startActivityForResult(intent, 0);
+                } else {
+                intent = new Intent(ActivityList.this, ActivityDetail.class);
+                Toast.makeText(getApplication(), "go to tWORD", Toast.LENGTH_LONG).show();
+                intent.putExtra("id", word.getId());
+                startActivity(intent);
+                }
+            }
+        });
     }
 }

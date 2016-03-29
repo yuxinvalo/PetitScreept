@@ -38,7 +38,21 @@ public class Controller {
         return list;
     }
 
+    public Words getVocabById(int id ){
+        Words word = ctrller.getByIdAllVocab(id);
+        return word;
+    }
+
+    public boolean update(Words word){
+        boolean bool = ctrller.update(word);
+        return bool;
+    }
+
     public void delete(int id){
         ctrller.delete(id);
+    }
+
+    public String percentKnowlege(){
+        return ctrller.percentKnowlege();
     }
 }
