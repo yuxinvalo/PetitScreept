@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,13 +180,21 @@ public class DBOperation {
         String percent = "";
         SQLiteDatabase db = database.getReadableDatabase();
         String sql = "select printf(\"%.2f\", " +
-                "count(tWORD.word) * 100.00/(select count(word) * 1.00 from tWORD)) " +
+                "count(tWORD.word) * 100.00/(select count(word) * 1.00 from tWORD)) as percent " +
                 "from tWORD inner join client_vocab ON client_vocab.word = tWORD.word; ";
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToFirst())
-            percent = cursor.getString(0) + "%";
-        cursor.close();
-        db.close();
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext())
+            { percent = cursor.getString(cursor.getColumnIndex("percent")) + "%";
+                Log.i("WTF",percent);
+            }
+
+            cursor.close();
+            db.close();
+        } else
+        {
+            percent = "error";
+        }
         return percent;
     }
 }

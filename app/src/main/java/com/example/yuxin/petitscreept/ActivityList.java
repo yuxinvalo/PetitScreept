@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 
 import android.widget.AdapterView;
@@ -32,8 +33,9 @@ public class ActivityList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listword);
         list_word = (ListView) findViewById(R.id.listword);
+        ctr = new Controller(this);
         String percent = ctr.percentKnowlege();
-
+        Log.i("WTF", percent);
         Toast.makeText(this,"percentage of familly word: " + percent, Toast.LENGTH_SHORT).show();
 
         //set adapter
