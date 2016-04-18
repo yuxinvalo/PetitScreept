@@ -14,7 +14,7 @@ public class DBHelpler extends SQLiteOpenHelper{
     private  static  final  String DATABASE_NAME = "word.db";
     private static final String sql = "CREATE TABLE tWORD (" +
                                         "_id integer primary key autoincrement, " +
-                                        "word text, " + "level integer, " +
+                                        "word text unique, " + "level integer, " +
                                         "lvl_master integer, " + "meaning text)";
     private static final String sql_client = "CREATE TABLE client_vocab (" +
             "_id integer primary key autoincrement, " +
@@ -32,7 +32,14 @@ public class DBHelpler extends SQLiteOpenHelper{
             "(14, 'capital', 2, 0, 'meaning'), (15, 'provider', 3, -1, 'meaning'), " +
             "(16, 'repeat', 1, -1, 'meaning'), (17, 'a', 0, 1, 'meaning')," +
             "(18, 'new', 0, 1, 'meaning'), (19, 'scheduler', 3, -1, 'meaning'), " +
-            "(20, 'document', 2, 0, 'meaning'), (21, 'standard', 2, 0, 'meaning');";
+            "(20, 'document', 2, 0, 'meaning'), (21, 'standard', 2, 0, 'meaning')," +
+            "(22, 'am', 0, 1, 'meaning'), (23, 'be', 0, 1, 'meaning')," +
+            "(24, 'these', 1, 1, 'meaning'), (25, 'they', 1, 1, 'meaning'),"+
+            "(26, 'this',  1, 1, 'meaning'), (27, 'that', 1, 1, 'meaning')," +
+            "(28, 'the',  1, 1, 'meaning'), (29, 'are', 1, 1, 'meaning')," +
+            "(30, 'is', 1, 1, 'meaning'), (31, 'by', 1, 1, 'meaning'),"+
+            "(32, 'on', 1, 1, 'meaning'), (33, 'in', 1, 1, 'meaning')," +
+            "(34, 'of', 1, 1, 'meaning'), (35, 'some', 1, 1, 'meaning');";
 
     public DBHelpler(Context context) {
         super(context,DATABASE_NAME, null, DATABASE_VERSION);

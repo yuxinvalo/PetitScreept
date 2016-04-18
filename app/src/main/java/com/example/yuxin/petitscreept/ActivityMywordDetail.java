@@ -85,10 +85,7 @@ public class ActivityMywordDetail extends AppCompatActivity {
                     try{
                         ctr.delete(id);
                         //Come back last activity
-                        Log.i("DELETE", "delete word: " + word.getWord());
-                        Intent comeback = new Intent();
-                        comeback.putExtra("words_token", 8);
-                        startActivity(comeback);
+                        finish();
                     } catch (Exception e){e.printStackTrace();}
                 }
             });

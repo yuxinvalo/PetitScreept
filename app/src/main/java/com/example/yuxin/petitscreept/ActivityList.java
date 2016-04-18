@@ -1,17 +1,28 @@
 package com.example.yuxin.petitscreept;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 
+import android.view.WindowManager;
 import android.widget.AdapterView;
 
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -22,11 +33,12 @@ import java.util.List;
 /**
  * Created by Yuxin on 25/02/2016.
  */
-public class ActivityList extends Activity {
+public class ActivityList extends Activity implements View.OnClickListener {
     private ListView list_word = null;
     private Controller ctr = null;
     private List word_list = null;
     private Words word = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +47,25 @@ public class ActivityList extends Activity {
         list_word = (ListView) findViewById(R.id.listword);
         ctr = new Controller(this);
         String percent = ctr.percentKnowlege();
-        Log.i("WTF", percent);
-        Toast.makeText(this,"percentage of familly word: " + percent, Toast.LENGTH_SHORT).show();
+
+        //set Dialog
+        dialog(percent);
 
         //set adapter
         setContent();
-        //Toast.makeText(this, "YOLO, setContent() finish", Toast.LENGTH_LONG).show();
         }
+
+    private void dialog(String percentage) {
+        AlertDialog dialog = new AlertDialog.Builder(this).setIcon(android.R.drawable.btn_star)
+                .setMessage("The percetage of the words you master: " + percentage)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
 
     //Set adapter
     private void setContent() {
@@ -87,11 +111,16 @@ public class ActivityList extends Activity {
                     startActivityForResult(intent, 0);
                 } else {
                 intent = new Intent(ActivityList.this, ActivityDetail.class);
-                Toast.makeText(getApplication(), "go to tWORD", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplication(), "go to tWORD", Toast.LENGTH_LONG).show();
                 intent.putExtra("id", word.getId());
                 startActivity(intent);
                 }
             }
         });
     }
+
+    @Override
+    public void onClick(View v) {
+//        popUp.dismiss();
+     }
 }

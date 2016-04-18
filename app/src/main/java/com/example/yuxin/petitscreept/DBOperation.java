@@ -36,6 +36,7 @@ public class DBOperation {
             return false;
         }
     }
+
     public boolean save(Words word){
         SQLiteDatabase db = database.getWritableDatabase();
 
@@ -60,7 +61,7 @@ public class DBOperation {
         SQLiteDatabase db = database.getReadableDatabase();
         String sql = "select * from tWORD LEFT JOIN client_vocab ON " +
                 "tWORD.word = client_vocab.word WHERE client_vocab.word IS NULL " +
-                "GROUP BY tWORD.word ORDER BY _id ASC";
+                "GROUP BY tWORD.word ORDER BY word ASC";
         Cursor cursor = db.rawQuery(sql, null);
 
         list = new ArrayList();
@@ -179,13 +180,15 @@ public class DBOperation {
     public String percentKnowlege(){
         String percent = "";
         SQLiteDatabase db = database.getReadableDatabase();
-        String sql = "select printf(\"%.2f\", " +
-                "count(tWORD.word) * 100.00/(select count(word) * 1.00 from tWORD)) as percent " +
-                "from tWORD inner join client_vocab ON client_vocab.word = tWORD.word; ";
+        String sql = "select (count(tWORD.word)*100.00/(select count(word) * 1.00 from tWORD)) as" +
+                " percent from tWORD inner join client_vocab ON client_vocab.word = tWORD.word;";
+//                "select printf(\"%.2f\", " +
+//                "count(tWORD.word) * 100.00/(select count(word) * 1.00 from tWORD)) as percent " +
+//                "from tWORD inner join client_vocab ON client_vocab.word = tWORD.word; ";
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext())
-            { percent = cursor.getString(cursor.getColumnIndex("percent")) + "%";
+            { percent = cursor.getString(cursor.getColumnIndex("percent")).substring(0, 5) + "%";
                 Log.i("WTF",percent);
             }
 

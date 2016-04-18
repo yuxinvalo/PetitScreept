@@ -56,7 +56,7 @@ public class FileList extends ListActivity {
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String n;
-            Toast.makeText(getApplicationContext(), "file chooser", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "file chooser", Toast.LENGTH_LONG).show();
             while ((n = bufferedReader.readLine()) != null){
                 String [] word_list = n.replace("[^a-zA-Z ]", "").toLowerCase().split(" ");
                 getContent(word_list);
